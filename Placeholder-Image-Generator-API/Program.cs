@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.ResponseCompression;
 using Placeholder_Image_Generator_API.Services.PlaceholderImageService;
+using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,14 @@ builder.Services.AddSwaggerGen();
 
 //Dependency Injection for our Service
 builder.Services.AddTransient<IPlaceholderImageService, PlaceholderImageService>();
+
+// GZip Compression
+builder.Services.AddResponseCompression();
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
+
 
 var app = builder.Build();
 

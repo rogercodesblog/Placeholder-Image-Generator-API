@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
 {
     /// <summary>
-    /// Service for Generating placegolder images based on provided parameters
+    /// Service for Generating placeholder images based on provided parameters
     /// </summary>
     public class PlaceholderImageService : IPlaceholderImageService
     {
@@ -27,7 +27,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
         /// </summary>
         public string TextColor { get; set; }
         /// <summary>
-        /// Defines the MIME type for the image
+        /// Defines the MIME type
         /// </summary>
         public string ImageType { get; set; }
         /// <summary>
@@ -53,6 +53,27 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
         }
         #endregion
 
+        #region Contract Methods
+
+        /*For Testing*/
+        public async Task<ServiceResponse<GeneratedImage>> GetPlacegolderImageWithDefaultValues()
+        {
+            var imagebytes = GenerateBaseImage();
+
+            ServiceResponse<GeneratedImage> _response = new ServiceResponse<GeneratedImage>()
+            {
+                Data = new GeneratedImage() {  ImageBinaries = new byte[imagebytes.Length] }
+            };
+
+            _response.IsSuccess = true;
+            _response.Message = "Returned image bytes";
+            //_response.Data.ImageBinaries = GenerateBaseImage();
+            _response.Data.ImageBinaries = imagebytes;
+            _response.Data.FileType = ImageType;
+
+            return _response;
+        }
+        #endregion
 
         #region Private Methods and Helpers
 
