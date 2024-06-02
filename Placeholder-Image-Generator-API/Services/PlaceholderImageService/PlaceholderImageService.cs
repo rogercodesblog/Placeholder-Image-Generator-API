@@ -53,26 +53,74 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
         }
         #endregion
 
-        #region Contract Methods
+        #region Interface Methods
 
-        /*For Testing*/
-        public async Task<ServiceResponse<GeneratedImage>> GetPlacegolderImageWithDefaultValues()
+        public Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageAsync(string sizeAndFormat, string Text)
         {
-            var imagebytes = GenerateBaseImage();
+            //Steps:
 
-            ServiceResponse<GeneratedImage> _response = new ServiceResponse<GeneratedImage>()
-            {
-                Data = new GeneratedImage() {  ImageBinaries = new byte[imagebytes.Length] }
-            };
+            //Verify size and Format
 
-            _response.IsSuccess = true;
-            _response.Message = "Returned image bytes";
-            //_response.Data.ImageBinaries = GenerateBaseImage();
-            _response.Data.ImageBinaries = imagebytes;
-            _response.Data.FileType = ImageType;
+            //Verify Text
 
-            return _response;
+            //Generate Image Based on Value
+
+
+            throw new NotImplementedException();
         }
+
+        public Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageWithCustomBackgroundColorAsync(string sizeAndFormat, string Text, string backgroundColor)
+        {
+            //Steps:
+
+            //Verify size and Format
+
+            //Verify Text
+
+            //Verify Background Color (check if its hex or color name, then set)
+
+            //Generate Image Based on Value
+
+            throw new NotImplementedException();
+        }
+
+        public Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageWithCustomColorsAsync(string sizeAndFormat, string Text, string backgroundColor, string fontColor)
+        {
+
+            //Steps:
+
+            //Verify size and Format
+
+            //Verify Text
+
+            //Verify Background Color (check if its hex or color name, then set)
+
+            //Verify Text Color (check if its hex or color name, then set)
+
+            //Generate Image Based on Value
+
+            throw new NotImplementedException();
+        }
+
+        //public async Task<ServiceResponse<GeneratedImage>> GetPlacegolderImageWithDefaultValues()
+        //{
+        //    var imagebytes = GenerateBaseImage();
+
+        //    ServiceResponse<GeneratedImage> _response = new ServiceResponse<GeneratedImage>()
+        //    {
+        //        Data = new GeneratedImage() {  ImageBinaries = new byte[imagebytes.Length] }
+        //    };
+
+        //    _response.IsSuccess = true;
+        //    _response.Message = "Returned image bytes";
+        //    //_response.Data.ImageBinaries = GenerateBaseImage();
+        //    _response.Data.ImageBinaries = imagebytes;
+        //    _response.Data.FileType = ImageType;
+
+        //    return _response;
+        //}
+
+
         #endregion
 
         #region Private Methods and Helpers
@@ -168,6 +216,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
                     
             }
         }
+
 
         #endregion
     }
