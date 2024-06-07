@@ -39,19 +39,20 @@ namespace Placeholder_Image_Generator_API.Controllers
 
         #region Main API Endpoints
 
-        [HttpGet("/{size-and-format}")]
-        public IActionResult GetImage([FromQuery] string? text)
+        [HttpGet("/{sizeandformat}")]
+        public async Task<ActionResult>GetImage(string sizeandformat , [FromQuery] string? text)
         {
-            return Ok($"text is: {text}");
+            var _result = await _placeholderImageService.GetPlaceholderImageAsync(sizeandformat, text);
+            return File(_result.Data.ImageBinaries, _result.Data.FileType);
         }
 
-        [HttpGet("/{size-and-format}/{background-color}")]
+        [HttpGet("/{sizeandformat}/{backgroundcolor}")]
         public IActionResult GetImageWithCustomBackgroundColor([FromQuery] string? text)
         {
             return Ok($"text is: {text}");
         }
 
-        [HttpGet("/{size-and-format}/{background-color}/{text-color}")]
+        [HttpGet("/{sizeandformat}/{backgroundcolor}/{textcolor}")]
         public IActionResult GetImageWithCustomColors([FromQuery] string? text)
         {
             return Ok($"text is: {text}");

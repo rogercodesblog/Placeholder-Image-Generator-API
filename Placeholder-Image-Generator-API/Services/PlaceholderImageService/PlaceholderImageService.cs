@@ -73,7 +73,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             //Verify size and Format
             //this will also help us to know before hand if the string got
             //the required delimiters to work with it, avoiding errors in the future
-            if (IsProvidedFormatValid(sizeAndFormat))
+            if (!IsProvidedFormatValid(sizeAndFormat))
             {
                 //if we get in here, it means the format is wrong, return a bad request
             }
@@ -84,12 +84,12 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
                 //if we get in here, it means the format is wrong, return a bad request
             }
 
-            if( Width > MaxSideSize || Height > MaxSideSize )
+            if (Width > MaxSideSize || Height > MaxSideSize)
             {
                 //Size Limit
             }
 
-            if(Width <=0|| Height <= 0)
+            if (Width <= 0 || Height <= 0)
             {
                 //We required a minimum size of 1, (who would do this?)
             }
@@ -104,12 +104,10 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
                 text = $"{Width}x{Height}";
             }
 
-            //Place Text on top of image here, before sending it
-
             _response.Data = new GeneratedImage();
             _response.IsSuccess = true;
             _response.Data.FileType = ImageType;
-            _response.Data.ImageBinaries = GenerateBaseImage();
+            _response.Data.ImageBinaries = WriteTextOnImage(GenerateBaseImage(),text);
 
             return _response;
         }
@@ -164,25 +162,6 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             throw new NotImplementedException();
         }
 
-        //public async Task<ServiceResponse<GeneratedImage>> GetPlacegolderImageWithDefaultValues()
-        //{
-        //    var imagebytes = GenerateBaseImage();
-
-        //    ServiceResponse<GeneratedImage> _response = new ServiceResponse<GeneratedImage>()
-        //    {
-        //        Data = new GeneratedImage() {  ImageBinaries = new byte[imagebytes.Length] }
-        //    };
-
-        //    _response.IsSuccess = true;
-        //    _response.Message = "Returned image bytes";
-        //    //_response.Data.ImageBinaries = GenerateBaseImage();
-        //    _response.Data.ImageBinaries = imagebytes;
-        //    _response.Data.FileType = ImageType;
-
-        //    return _response;
-        //}
-
-
         #endregion
 
         #region Private Methods and Helpers
@@ -205,7 +184,44 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             bitmap.Save(ms, ImageFormat);
             return ms.ToArray();
         }
+        /// <summary>
+        /// Add text to an image
+        /// </summary>
+        /// <param name="imageBinaries">byte array containig the image data</param>
+        /// <param name="text">the text that is going to be added to the image</param>
+        /// <returns>image byte array data</returns>
+        private byte[] WriteTextOnImage(byte[] imageBinaries, string text)
+        {
+            //We declare the bitmap 
+            Bitmap bitmap;
+            //and we create it with the provided iamge data
+            using (MemoryStream ms = new MemoryStream(imageBinaries))
+            {
+                bitmap = new Bitmap(ms);
+            }
 
+            //we set the position in which we are going to write the text
+            PointF textPosition = new PointF(bitmap.Width / 2, bitmap.Height / 2);
+
+            //We create a Graphics object from our previously created bitmap
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                //Selecting font and size
+                using (Font _fontArial = new Font("Arial", 12))
+                {
+                    //adds text to image
+                    graphics.DrawString(text, _fontArial, Brushes.Black, textPosition);
+                }
+            }
+
+            //we save the data and return it
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat);
+                return ms.ToArray();
+            }
+
+        }
 
         /// <summary>
         /// Get default values from appsettings.json and set them on the properties on this very same service
