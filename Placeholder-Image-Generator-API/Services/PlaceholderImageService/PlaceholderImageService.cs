@@ -70,45 +70,88 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             //ServiceResponse object to give information about the process
             ServiceResponse<GeneratedImage> _response = new ServiceResponse<GeneratedImage>();
 
-            //Verify size and Format
-            //this will also help us to know before hand if the string got
-            //the required delimiters to work with it, avoiding errors in the future
-            if (!IsProvidedFormatValid(sizeAndFormat))
+            //try catch block, in case something goes wrong
+            try
             {
-                //if we get in here, it means the format is wrong, return a bad request
-            }
+                //Verify size and Format
+                //this will also help us to know before hand if the string got
+                //the required delimiters to work with it, avoiding errors in the future
+                if (!IsProvidedFormatValid(sizeAndFormat))
+                {
+                    //if we get in here, it means the format is wrong, which means
+                    //theres ir more than one 'x' or '.' in the provided string
+                    //we exit early
+                    _response.Message = "The provided format is not valid.";
+                    return _response;
+                }
 
-            //Verify Text and Set Property Values
-            if (!VerifyAndSetSizeAndFormat(sizeAndFormat))
+                //Verify Text and Set Property Values
+                if (!SetSizeAndFormat(sizeAndFormat))
+                {
+                    //if we get in here, it means the format is wrong, which means
+                    //there is a a letter or some other thing in or between the numbers, ex; 64A instead of 640)
+                    //we exit early
+                    _response.Message = "The width/heigth size must be made of numbers only.";
+                    return _response;
+                }
+
+                //Verify max size
+                if (Width > MaxSideSize || Height > MaxSideSize)
+                {
+                    _response.Message = $"The width/height can't be greater than {MaxSideSize}.";
+                    return _response;
+                }
+
+                //Verify min size
+                if (Width <= 0 || Height <= 0)
+                {
+                    _response.Message = "The width/height must be at least 1px.";
+                    return _response;
+                }
+
+                //Verify if user provided a text
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    text = $"{Width}x{Height}";
+                }
+
+                //Verify text length
+                if (text.Length > MaxTextLength)
+                {
+                    _response.Message = $"The text can't be longer than {MaxTextLength} letters.";
+                    return _response;
+                }
+
+                //Generate data and place it on our _response object
+                _response.Data = new GeneratedImage();
+                _response.IsSuccess = true;
+                _response.Data.FileType = ImageType;
+                _response.Data.ImageBinaries = WriteTextOnImage(GenerateBaseImage(), text);
+            }
+            //We will catch an 'OverflowException' here
+            //if the provided width or heigth is greater
+            //than the max value of int when calling
+            //'SetSizeAndFormat' method
+            catch (OverflowException)
             {
-                //if we get in here, it means the format is wrong, return a bad request
+                _response.Message = $"The width/height can't be greater than {MaxSideSize}.";
+                return _response;
             }
-
-            if (Width > MaxSideSize || Height > MaxSideSize)
+            //This means we run into an issue while converting the data type
+            //which concludes that the user provided an invalid format
+            catch (FormatException)
             {
-                //Size Limit
+                _response.Message = "The provided format is not valid.";
+                return _response;
             }
-
-            if (Width <= 0 || Height <= 0)
+            //General Exception if something else goes wrong
+            catch (Exception ex)
             {
-                //We required a minimum size of 1, (who would do this?)
+                _response.IsInternalError = true;
+                _response.Message = "There was an error generating the image, please try again.";
+                return _response;
             }
-
-            if (text.Length > MaxTextLength)
-            {
-                //can't be longer than max length
-            }
-
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                text = $"{Width}x{Height}";
-            }
-
-            _response.Data = new GeneratedImage();
-            _response.IsSuccess = true;
-            _response.Data.FileType = ImageType;
-            _response.Data.ImageBinaries = WriteTextOnImage(GenerateBaseImage(),text);
-
+            //If everything went as expected, we return the _response
             return _response;
         }
 
@@ -126,7 +169,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             }
 
             //Verify Text and Set Property Values
-            if (!VerifyAndSetSizeAndFormat(sizeAndFormat))
+            if (!SetSizeAndFormat(sizeAndFormat))
             {
                 //if we get in here, it means the format is wrong, return a bad request
             }
@@ -315,7 +358,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
         /// </summary>
         /// <param name="format"></param>
         /// <returns></returns>
-        private bool VerifyAndSetSizeAndFormat(string format)
+        private bool SetSizeAndFormat(string format)
         {
 
             //Change Capital letters to "normal" letters, so if the user

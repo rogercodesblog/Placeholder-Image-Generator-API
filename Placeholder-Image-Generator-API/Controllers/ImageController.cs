@@ -40,9 +40,26 @@ namespace Placeholder_Image_Generator_API.Controllers
         #region Main API Endpoints
 
         [HttpGet("/{sizeandformat}")]
-        public async Task<ActionResult>GetImage(string sizeandformat , [FromQuery] string? text)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult>GetImage(string sizeandformat, [FromQuery] string? text)
         {
+
             var _result = await _placeholderImageService.GetPlaceholderImageAsync(sizeandformat, text);
+
+            if (_result.IsInternalError)
+            {
+                //Change Message
+                return StatusCode(500, "Error");
+            }
+
+            if (_result.IsSuccess == false)
+            {
+                //Change Message
+                return BadRequest("Bad");
+            }
+
             return File(_result.Data.ImageBinaries, _result.Data.FileType);
         }
 
