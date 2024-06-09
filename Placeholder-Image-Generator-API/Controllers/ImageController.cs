@@ -25,18 +25,6 @@ namespace Placeholder_Image_Generator_API.Controllers
 
         #endregion
 
-        /*For Testing*/
-        //[HttpGet]
-        //public async Task<ActionResult<ServiceResponse<GeneratedImage>>> GetBaseImage()
-        //{
-        //    var result = await _placeholderImageService.GetPlacegolderImageWithDefaultValues();
-        //    if (result.IsSuccess == false)
-        //    {
-        //        return BadRequest("Something Bad Happened");
-        //    }
-        //    return File(result.Data.ImageBinaries,result.Data.FileType);
-        //}
-
         #region Main API Endpoints
 
         [HttpGet("/{sizeandformat}")]

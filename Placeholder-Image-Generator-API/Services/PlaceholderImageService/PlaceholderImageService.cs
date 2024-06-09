@@ -2,6 +2,7 @@
 using Placeholder_Image_Generator_API.Models;
 using System.Drawing;
 using System.Drawing.Imaging;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
 {
@@ -138,7 +139,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
                 return _response;
             }
             //This means we run into an issue while converting the data type
-            //which concludes that the user provided an invalid format
+            //which means that the user provided an invalid format
             catch (FormatException)
             {
                 _response.Message = "The provided format is not valid.";
@@ -155,36 +156,104 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             return _response;
         }
 
-        public Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageWithCustomBackgroundColorAsync(string sizeAndFormat, string Text, string backgroundColor)
+        public async Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageWithCustomBackgroundColorAsync(string sizeAndFormat, string text, string backgroundColor)
         {
             //ServiceResponse object to give information about the process
-            ServiceResponse<GeneratedImage> response = new ServiceResponse<GeneratedImage>();
+            ServiceResponse<GeneratedImage> _response = new ServiceResponse<GeneratedImage>();
 
-            //Verify size and Format
-            //this will also help us to know before hand if the string got
-            //the required delimiters to work with it, avoiding errors in the future
-            if (IsProvidedFormatValid(sizeAndFormat))
+            //try catch block, in case something goes wrong
+            try
             {
-                //if we get in here, it means the format is wrong, return a bad request
-            }
+                //Verify size and Format
+                //this will also help us to know before hand if the string got
+                //the required delimiters to work with it, avoiding errors in the future
+                if (!IsProvidedFormatValid(sizeAndFormat))
+                {
+                    //if we get in here, it means the format is wrong, which means
+                    //theres ir more than one 'x' or '.' in the provided string
+                    //we exit early
+                    _response.Message = "The provided format is not valid.";
+                    return _response;
+                }
 
-            //Verify Text and Set Property Values
-            if (!SetSizeAndFormat(sizeAndFormat))
+                //Verify Text and Set Property Values
+                if (!SetSizeAndFormat(sizeAndFormat))
+                {
+                    //if we get in here, it means the format is wrong, which means
+                    //there is a a letter or some other thing in or between the numbers, ex; 64A instead of 640)
+                    //we exit early
+                    _response.Message = "The width/heigth size must be made of numbers only.";
+                    return _response;
+                }
+
+                //Verify max size
+                if (Width > MaxSideSize || Height > MaxSideSize)
+                {
+                    _response.Message = $"The width/height can't be greater than {MaxSideSize}.";
+                    return _response;
+                }
+
+                //Verify min size
+                if (Width <= 0 || Height <= 0)
+                {
+                    _response.Message = "The width/height must be at least 1px.";
+                    return _response;
+                }
+
+                //Verify if user provided a text
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    text = $"{Width}x{Height}";
+                }
+
+                //Verify text length
+                if (text.Length > MaxTextLength)
+                {
+                    _response.Message = $"The text can't be longer than {MaxTextLength} letters.";
+                    return _response;
+                }
+
+                //Verify Colors
+                //Verify Background Color (check if its hex or color name, then set)
+
+                //check if colorname is hex or name, or search the provided name in the colors enum
+
+                //if it doesn't exists in the enum list then is a hex, verify if its hex (cuz something can happen)
+
+                //put the color if its the color, otherwise put the default color
+
+
+                //Generate data and place it on our _response object
+                _response.Data = new GeneratedImage();
+                _response.IsSuccess = true;
+                _response.Data.FileType = ImageType;
+                _response.Data.ImageBinaries = WriteTextOnImage(GenerateBaseImage(), text);
+            }
+            //We will catch an 'OverflowException' here
+            //if the provided width or heigth is greater
+            //than the max value of int when calling
+            //'SetSizeAndFormat' method
+            catch (OverflowException)
             {
-                //if we get in here, it means the format is wrong, return a bad request
+                _response.Message = $"The width/height can't be greater than {MaxSideSize}.";
+                return _response;
             }
-
-            //Verify Background Color (check if its hex or color name, then set)
-
-            //check if colorname is hex or name, or search the provided name in the colors enum
-
-            //if it doesn't exists in the enum list then is a hex, verify if its hex (cuz something can happen)
-
-            //put the color if its the color, otherwise put the default color
-
-            //Generate Image Based on Value
-
-            throw new NotImplementedException();
+            //This means we run into an issue while converting the data type
+            //which means that the user provided an invalid format
+            catch (FormatException)
+            {
+                _response.Message = "The provided format is not valid.";
+                return _response;
+            }
+            //General Exception if something else goes wrong
+            catch (Exception ex)
+            {
+                _response.IsInternalError = true;
+                _response.Message = "There was an error generating the image, please try again.";
+                return _response;
+            }
+            //If everything went as expected, we return the _response
+            return _response;
         }
 
         public Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageWithCustomColorsAsync(string sizeAndFormat, string Text, string backgroundColor, string fontColor)
@@ -250,7 +319,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             using (Graphics graphics = Graphics.FromImage(bitmap))
             {
                 //Selecting font and size
-                using (Font _fontArial = new Font("Arial", 12))
+                using (System.Drawing.Font _fontArial = new System.Drawing.Font("Arial", 12))
                 {
                     //adds text to image
                     graphics.DrawString(text, _fontArial, Brushes.Black, textPosition);
