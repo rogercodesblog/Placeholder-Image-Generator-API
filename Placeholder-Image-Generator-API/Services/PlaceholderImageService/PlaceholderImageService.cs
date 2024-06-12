@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Extensions;
 using Placeholder_Image_Generator_API.Models;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
@@ -215,13 +217,11 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
 
                 //Verify Colors
                 //Verify Background Color (check if its hex or color name, then set)
-
-                //check if colorname is hex or name, or search the provided name in the colors enum
-
-                //if it doesn't exists in the enum list then is a hex, verify if its hex (cuz something can happen)
-
-                //put the color if its the color, otherwise put the default color
-
+                if (!SetBackgroundColor(backgroundColor))
+                {
+                    _response.Message = "The provided color is not valid";
+                    return _response;
+                }
 
                 //Generate data and place it on our _response object
                 _response.Data = new GeneratedImage();
@@ -350,8 +350,36 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             TextColor = GetColor(_configuration.GetValue<string>("ImageGenerationSettings:DefaultTextColor"));
         }
 
+        private bool SetBackgroundColor(string backgroundColor)
+        {
 
-#warning Verify color before getting it
+            //We Verify if the backgroundColor string
+            //contains a valid name like "red" or "blue"
+            if (IsColorNameValid(backgroundColor))
+            {
+                //We set value from color name
+                BackgroundColor = GetColor(backgroundColor);
+                return true;
+            }
+
+            //We verify if the backgroundColor string
+            //is a hex color like "#fff", "#72962e", "000"
+            bool _isColorHexNumber = int.TryParse(backgroundColor.StartsWith("#") ? backgroundColor.Substring(1) : backgroundColor, System.Globalization.NumberStyles.HexNumber, NumberFormatInfo.CurrentInfo,  out int ignoreThisVariable);
+            
+            if(_isColorHexNumber)
+            {
+                //We set value from Hex color code
+                //Color _color = System.Drawing.ColorTranslator.FromHtml(backgroundColor.StartsWith("#") ? backgroundColor.Substring(1) : backgroundColor)));
+
+                //BackgroundColor = GetColor(_color);
+                BackgroundColor = backgroundColor.StartsWith("#") ?  backgroundColor : backgroundColor.Insert(0,"#");
+                return true;
+            }
+
+            //If we get in here, then the format isn't valid
+            return false;
+        }
+
         /// <summary>
         /// Enter color name (Ex: Red, Blue, etc) and returns the Hex version of it (internally calls "ColorToHex" Method)
         /// </summary>
@@ -363,7 +391,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
         }
 
         /// <summary>
-        /// 
+        /// We set the hex color value from the provided Color object
         /// </summary>
         /// <param name="color">Color object</param>
         /// <returns>Hex value of the provided color</returns>
@@ -372,14 +400,26 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             return $"#{color.R.ToString("X2")}{color.G.ToString("X2")}{color.B.ToString("X2")}";
         }
 
-#warning Debug This and see arrary values 
-        private bool VerifyColor(string name)
+        /// <summary>
+        /// Verify if provided string is a valid color name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private bool IsColorNameValid(string name)
         {
-            var colors = Enum.GetValues(typeof(KnownColor));
-            foreach (var color in colors)
+            //Get all "Known Colors" 
+            KnownColor[] _knownColors = Enum.GetValues(typeof(KnownColor)) as KnownColor[];
+
+            //Create a new list with all the known color names
+            //now normalized
+            var _knownColorsNames =  _knownColors.Select(asds => asds.GetDisplayName().ToLower()).ToList();
+
+            //Verify if the name exist in the list
+            if(!_knownColorsNames.Any(colorname=> colorname.Equals(name.ToLower())))
             {
-                color.Equals(name);
+                return false;
             }
+
             return true;
         }
 

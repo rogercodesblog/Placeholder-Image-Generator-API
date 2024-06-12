@@ -20,7 +20,7 @@ namespace Placeholder_Image_Generator_API.Controllers
 
         public ImageController(IPlaceholderImageService placeholderImageService)
         {
-            _placeholderImageService = placeholderImageService ;
+            _placeholderImageService = placeholderImageService;
         }
 
         #endregion
@@ -31,7 +31,7 @@ namespace Placeholder_Image_Generator_API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<ActionResult>GetImage(string sizeandformat, [FromQuery] string? text)
+        public async Task<ActionResult> GetImage(string sizeandformat, [FromQuery] string? text)
         {
 
             var _result = await _placeholderImageService.GetPlaceholderImageAsync(sizeandformat, text);
@@ -52,9 +52,24 @@ namespace Placeholder_Image_Generator_API.Controllers
         }
 
         [HttpGet("/{sizeandformat}/{backgroundcolor}")]
-        public IActionResult GetImageWithCustomBackgroundColor([FromQuery] string? text)
+        public async Task<ActionResult> GetImageWithCustomBackgroundColor(string sizeandformat, string backgroundcolor, [FromQuery] string? text)
         {
-            return Ok($"text is: {text}");
+
+            var _result = await _placeholderImageService.GetPlaceholderImageWithCustomBackgroundColorAsync(sizeandformat, text, backgroundcolor);
+
+            if (_result.IsInternalError)
+            {
+                //Change Message
+                return StatusCode(500, "Error");
+            }
+
+            if (_result.IsSuccess == false)
+            {
+                //Change Message
+                return BadRequest("Bad");
+            }
+
+            return File(_result.Data.ImageBinaries, _result.Data.FileType);
         }
 
         [HttpGet("/{sizeandformat}/{backgroundcolor}/{textcolor}")]
