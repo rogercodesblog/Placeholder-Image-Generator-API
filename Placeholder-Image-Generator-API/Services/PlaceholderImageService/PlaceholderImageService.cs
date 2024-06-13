@@ -215,11 +215,10 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
                     return _response;
                 }
 
-                //Verify Colors
                 //Verify Background Color (check if its hex or color name, then set)
                 if (!SetBackgroundColor(backgroundColor))
                 {
-                    _response.Message = "The provided color is not valid";
+                    _response.Message = "The provided background color does not have a valid format";
                     return _response;
                 }
 
@@ -256,22 +255,108 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             return _response;
         }
 
-        public Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageWithCustomColorsAsync(string sizeAndFormat, string Text, string backgroundColor, string fontColor)
+        public async Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageWithCustomBackgroundAndFontColorAsync(string sizeAndFormat, string text, string backgroundColor, string fontColor)
         {
+            //ServiceResponse object to give information about the process
+            ServiceResponse<GeneratedImage> _response = new ServiceResponse<GeneratedImage>();
 
-            //Steps:
+            //try catch block, in case something goes wrong
+            try
+            {
+                //Verify size and Format
+                //this will also help us to know before hand if the string got
+                //the required delimiters to work with it, avoiding errors in the future
+                if (!IsProvidedFormatValid(sizeAndFormat))
+                {
+                    //if we get in here, it means the format is wrong, which means
+                    //theres ir more than one 'x' or '.' in the provided string
+                    //we exit early
+                    _response.Message = "The provided format is not valid.";
+                    return _response;
+                }
 
-            //Verify size and Format
+                //Verify Text and Set Property Values
+                if (!SetSizeAndFormat(sizeAndFormat))
+                {
+                    //if we get in here, it means the format is wrong, which means
+                    //there is a a letter or some other thing in or between the numbers, ex; 64A instead of 640)
+                    //we exit early
+                    _response.Message = "The width/heigth size must be made of numbers only.";
+                    return _response;
+                }
 
-            //Verify Text
+                //Verify max size
+                if (Width > MaxSideSize || Height > MaxSideSize)
+                {
+                    _response.Message = $"The width/height can't be greater than {MaxSideSize}.";
+                    return _response;
+                }
 
-            //Verify Background Color (check if its hex or color name, then set)
+                //Verify min size
+                if (Width <= 0 || Height <= 0)
+                {
+                    _response.Message = "The width/height must be at least 1px.";
+                    return _response;
+                }
 
-            //Verify Text Color (check if its hex or color name, then set)
+                //Verify if user provided a text
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    text = $"{Width}x{Height}";
+                }
 
-            //Generate Image Based on Value
+                //Verify text length
+                if (text.Length > MaxTextLength)
+                {
+                    _response.Message = $"The text can't be longer than {MaxTextLength} letters.";
+                    return _response;
+                }
 
-            throw new NotImplementedException();
+                //Verify Background Color (check if its hex or color name, then set)
+                if (!SetBackgroundColor(backgroundColor))
+                {
+                    _response.Message = "The provided background color does not have a valid format";
+                    return _response;
+                }
+
+                //Verify Font Color
+                if(!SetFontColor(fontColor))
+                {
+                    _response.Message = "The provided font color does not have a valid format";
+                    return _response;
+                }
+
+                //Generate data and place it on our _response object
+                _response.Data = new GeneratedImage();
+                _response.IsSuccess = true;
+                _response.Data.FileType = ImageType;
+                _response.Data.ImageBinaries = WriteTextOnImage(GenerateBaseImage(), text);
+            }
+            //We will catch an 'OverflowException' here
+            //if the provided width or heigth is greater
+            //than the max value of int when calling
+            //'SetSizeAndFormat' method
+            catch (OverflowException)
+            {
+                _response.Message = $"The width/height can't be greater than {MaxSideSize}.";
+                return _response;
+            }
+            //This means we run into an issue while converting the data type
+            //which means that the user provided an invalid format
+            catch (FormatException)
+            {
+                _response.Message = "The provided format is not valid.";
+                return _response;
+            }
+            //General Exception if something else goes wrong
+            catch (Exception ex)
+            {
+                _response.IsInternalError = true;
+                _response.Message = "There was an error generating the image, please try again.";
+                return _response;
+            }
+            //If everything went as expected, we return the _response
+            return _response;
         }
 
         #endregion
@@ -350,6 +435,33 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             TextColor = GetColor(_configuration.GetValue<string>("ImageGenerationSettings:DefaultTextColor"));
         }
 
+        private bool SetFontColor(string fontColor)
+        {
+            //We Verify if the fontColor string
+            //contains a valid name like "red" or "blue"
+            if (IsColorNameValid(fontColor))
+            {
+                //We set value from color name
+                TextColor = GetColor(fontColor);
+                return true;
+            }
+
+            //We verify if the fontColor string
+            //is a hex color like "#fff", "#72962e", "000"
+            bool _isColorHexNumber = int.TryParse(fontColor.StartsWith("#") ? fontColor.Substring(1) : fontColor, System.Globalization.NumberStyles.HexNumber, NumberFormatInfo.CurrentInfo, out int ignoreThisVariable);
+
+            if (_isColorHexNumber)
+            {
+                //We set value from Hex color code
+                TextColor = fontColor.StartsWith("#") ? fontColor : fontColor.Insert(0, "#");
+                return true;
+            }
+
+            //If we get in here, then the format isn't valid
+            return false;
+        }
+
+
         private bool SetBackgroundColor(string backgroundColor)
         {
 
@@ -364,15 +476,12 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
 
             //We verify if the backgroundColor string
             //is a hex color like "#fff", "#72962e", "000"
-            bool _isColorHexNumber = int.TryParse(backgroundColor.StartsWith("#") ? backgroundColor.Substring(1) : backgroundColor, System.Globalization.NumberStyles.HexNumber, NumberFormatInfo.CurrentInfo,  out int ignoreThisVariable);
-            
-            if(_isColorHexNumber)
+            bool _isColorHexNumber = int.TryParse(backgroundColor.StartsWith("#") ? backgroundColor.Substring(1) : backgroundColor, System.Globalization.NumberStyles.HexNumber, NumberFormatInfo.CurrentInfo, out int ignoreThisVariable);
+
+            if (_isColorHexNumber)
             {
                 //We set value from Hex color code
-                //Color _color = System.Drawing.ColorTranslator.FromHtml(backgroundColor.StartsWith("#") ? backgroundColor.Substring(1) : backgroundColor)));
-
-                //BackgroundColor = GetColor(_color);
-                BackgroundColor = backgroundColor.StartsWith("#") ?  backgroundColor : backgroundColor.Insert(0,"#");
+                BackgroundColor = backgroundColor.StartsWith("#") ? backgroundColor : backgroundColor.Insert(0, "#");
                 return true;
             }
 
@@ -412,10 +521,10 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
 
             //Create a new list with all the known color names
             //now normalized
-            var _knownColorsNames =  _knownColors.Select(asds => asds.GetDisplayName().ToLower()).ToList();
+            var _knownColorsNames = _knownColors.Select(asds => asds.GetDisplayName().ToLower()).ToList();
 
             //Verify if the name exist in the list
-            if(!_knownColorsNames.Any(colorname=> colorname.Equals(name.ToLower())))
+            if (!_knownColorsNames.Any(colorname => colorname.Equals(name.ToLower())))
             {
                 return false;
             }
