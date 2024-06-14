@@ -68,6 +68,12 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
 
         #region Interface Methods
 
+        /// <summary>
+        /// Generate image based on parameters
+        /// </summary>
+        /// <param name="sizeAndFormat">this parameter must have at least 1 side (ex: 600) or 2 (ex:400x600), the image format is optional, must be '.jpg' (default), '.png' or '.gif' (ex: 400x600.jpg).</param>
+        /// <param name="text">The text that will be displayed on the image.</param>
+        /// <returns>Service response with custom data type that includes; ImageBinaries as byte array and file MIME type.</returns>
         public async Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageAsync(string sizeAndFormat, string text)
         {
             //ServiceResponse object to give information about the process
@@ -158,6 +164,13 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             return _response;
         }
 
+        /// <summary>
+        /// Generate image based on parameters
+        /// </summary>
+        /// <param name="sizeAndFormat">this parameter must have at least 1 side (ex: 600) or 2 (ex:400x600), the image format is optional, must be '.jpg' (default), '.png' or '.gif' (ex: 400x600.jpg).</param>
+        /// <param name="text">The text that will be displayed on the image.</param>
+        /// <param name="backgroundColor">The background color must be either; a hex color (ex: #fff, the hash is optional) or a name "blue" (It's not case sensitive)</param>
+        /// <returns>Service response with custom data type that includes; ImageBinaries as byte array and file MIME type.</returns>
         public async Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageWithCustomBackgroundColorAsync(string sizeAndFormat, string text, string backgroundColor)
         {
             //ServiceResponse object to give information about the process
@@ -254,7 +267,14 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             //If everything went as expected, we return the _response
             return _response;
         }
-
+        /// <summary>
+        /// Generate image based on parameters
+        /// </summary>
+        /// <param name="sizeAndFormat">this parameter must have at least 1 side (ex: 600) or 2 (ex:400x600), the image format is optional, must be '.jpg' (default), '.png' or '.gif' (ex: 400x600.jpg).</param>
+        /// <param name="text">The text that will be displayed on the image.</param>
+        /// <param name="backgroundColor">The background color must be either; a hex color (ex: #fff, the hash is optional) or a name "blue" (It's not case sensitive)</param>
+        /// <param name="fontColor">The font color must be either; a hex color (ex: #fff, the hash is optional) or a name "blue" (It's not case sensitive)</param>
+        /// <returns>Service response with custom data type that includes; ImageBinaries as byte array and file MIME type.</returns>
         public async Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageWithCustomBackgroundAndFontColorAsync(string sizeAndFormat, string text, string backgroundColor, string fontColor)
         {
             //ServiceResponse object to give information about the process
@@ -435,6 +455,12 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             TextColor = GetColor(_configuration.GetValue<string>("ImageGenerationSettings:DefaultTextColor"));
         }
 
+        /// <summary>
+        /// Verify and Set the font color from a provided value
+        /// </summary>
+        /// <param name="backgroundColor">font color, can either be a name "blue" or a hex value color "#fff" (with or without the hash)</param>
+        /// <returns>returns true if the color format was correct and was set correctly</returns>
+
         private bool SetFontColor(string fontColor)
         {
             //We Verify if the fontColor string
@@ -461,7 +487,11 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
             return false;
         }
 
-
+        /// <summary>
+        /// Verify and Set the background color from a provided value
+        /// </summary>
+        /// <param name="backgroundColor">Background color, can either be a name "blue" or a hex value color "#fff" (with or without the hash)</param>
+        /// <returns>returns true if the color format was correct and was set correctly</returns>
         private bool SetBackgroundColor(string backgroundColor)
         {
 
