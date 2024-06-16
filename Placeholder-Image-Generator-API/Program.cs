@@ -23,10 +23,21 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 
 var app = builder.Build();
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+//Configuring Index.html as default page
+//instead of swagger documentation
+var options = new DefaultFilesOptions();
+options.DefaultFileNames.Clear();
+options.DefaultFileNames.Add("index.html");
+
+app.UseDefaultFiles(options);
+
+app.UseStaticFiles();
+app.UseRouting();
 
 app.MapControllers();
 
