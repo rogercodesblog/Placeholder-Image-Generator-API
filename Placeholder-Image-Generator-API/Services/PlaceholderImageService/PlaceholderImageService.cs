@@ -411,10 +411,20 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
         {
             //We declare the bitmap 
             Bitmap bitmap;
-            //and we create it with the provided iamge data
-            using (MemoryStream ms = new MemoryStream(imageBinaries))
+
+            //In case of the format being a gif, we must create
+            //an Image object to create our bitmap, otherwise we'll get an error
+            if (ImageType == "image/gif")
             {
-                bitmap = new Bitmap(ms);
+                System.Drawing.Image img = System.Drawing.Image.FromStream(new MemoryStream(imageBinaries));
+                bitmap = new Bitmap(img);
+            }
+            else {
+                //and we create it with the provided image data
+                using (MemoryStream ms = new MemoryStream(imageBinaries))
+                {
+                    bitmap = new Bitmap(ms);
+                }
             }
 
             //we set the position in which we are going to write the text
