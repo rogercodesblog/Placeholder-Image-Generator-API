@@ -427,14 +427,14 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
                 }
             }
 
-            //we set the position in which we are going to write the text
-            PointF textPosition = new PointF(bitmap.Width / 2, bitmap.Height / 2);
+            //we set the position in which we are going to write the text, this will place it in the middle of the image heigth
+            PointF textPosition = new PointF( ((bitmap.Width - text.Count()) /2) / 2.0f , (bitmap.Height /2.3f));
 
             //We create a Graphics object from our previously created bitmap
             using (Graphics graphics = Graphics.FromImage(bitmap))
             {
-                //Selecting font and size
-                using (System.Drawing.Font _fontArial = new System.Drawing.Font("Arial", 12))
+                //Selecting font, and using "GetFontSize()" method to set the font size
+                using (System.Drawing.Font _fontArial = new System.Drawing.Font("Arial", GetFontSize()))
                 {
                     //adds text to image
                     graphics.DrawString(text, _fontArial, Brushes.Black, textPosition);
@@ -495,6 +495,46 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
 
             //If we get in here, then the format isn't valid
             return false;
+        }
+
+        /// <summary>
+        /// This method return the font size that will be used when 
+        /// placing the text on the image, it's calculated using
+        /// the image heigth
+        /// </summary>
+        /// <returns>font size as float</returns>
+        private float GetFontSize()
+        {
+            float fontSize = 0;
+            if (Height > 1600)
+            {
+                fontSize = 80;
+            }
+            if (Height <= 1600)
+            {
+                fontSize = 68;
+            }
+            if (Height <= 1200)
+            {
+                fontSize = 56;
+            }
+            if (Height <= 600)
+            {
+                fontSize = 48;
+            }
+            if (Height <= 400)
+            {
+                fontSize = 36;
+            }
+            if (Height <= 250)
+            {
+                fontSize = 28;
+            }
+            if (Height <= 100)
+            {
+                fontSize = 16;
+            }
+            return fontSize;
         }
 
         /// <summary>
