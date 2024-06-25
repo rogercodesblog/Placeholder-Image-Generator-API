@@ -32,11 +32,11 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
         public int MaxTextLength { get; set; }
 
         /// <summary>
-        /// Defines the background color of the image
+        /// Defines the background color of the image (in Hex Value)
         /// </summary>
         private string BackgroundColor { get; set; }
         /// <summary>
-        /// Defines the text color that will be placed on the image (if requested)
+        /// Defines the text color that will be placed on the image (if requested, i'ts Hex Value)
         /// </summary>
         private string TextColor { get; set; }
         /// <summary>
@@ -437,7 +437,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
                 using (System.Drawing.Font _fontArial = new System.Drawing.Font("Arial", GetFontSize()))
                 {
                     //adds text to image
-                    graphics.DrawString(text, _fontArial, Brushes.Black, textPosition);
+                    graphics.DrawString(text, _fontArial,  new SolidBrush( (Color) new ColorConverter().ConvertFromString(TextColor) )  , textPosition);
                 }
             }
 
