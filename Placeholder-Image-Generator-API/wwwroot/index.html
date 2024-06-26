@@ -23,25 +23,27 @@
             <div class="col-12 text-center">
                 <h2 class="fw-bold">API Documentation</h2>
                 <div class="px-md-5 my-3">
-                    <p>How does this even works?, we're glad you asked because we are going to explain it right here</p>
-                    <a class="btn btn-dark" href="/swagger/" target="_blank">
-                        You can also view the Swagger
-                        Documentation
-                    </a>
+                    <div class="offset-md-3 col-md-6 offset-1 col-10">
+                        <p>How does this even works?, we're glad you asked because we are going to explain it right here</p>
+                        <a class="btn btn-dark" href="/swagger/" target="_blank">
+                            You can also view the Swagger
+                            Documentation
+                        </a>
+                    </div>
                 </div>
                 <hr class="offset-md-3 col-md-6 offset-1 col-10 my-3 my-md-5" />
                 <h2 class="fw-bold">Size</h2>
                 <div class="my-3">
-                    <p>The size can be specified using the format <b>Width x Height</b>:</p>
                     <div class="offset-md-3 col-md-6 offset-1 col-10">
+                        <p>The size can be specified using the format <b>Width x Height</b>:</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/300x200" />
                         <img src="/resources/images/300x200.jpg" class="img-fluid mt-3">
                     </div>
                 </div>
                 <div class="my-3">
-                    <p>The <b>Height</b> is optional, you can create a square by not providing it:</p>
                     <div class="offset-md-3 col-md-6 offset-1 col-10">
+                    <p>The <b>Height</b> is optional, you can create a square by not providing it:</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/250" />
                         <img src="/resources/images/250x250.jpeg" class="img-fluid mt-3">
@@ -57,8 +59,8 @@
                 <hr class="offset-md-3 col-md-6 offset-1 col-10 my-3 my-md-5" />
                 <h2>Format</h2>
                 <div class="my-3">
-                    <p>Generated images can have one of the next three formats: <b>jpg</b>, <b>png</b> or <b>gif</b>.</p>
                     <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
+                    <p>Generated images can have one of the next three formats: <b>jpg</b>, <b>png</b> or <b>gif</b>.</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/640x480.jpg" />
                     </div>
@@ -81,8 +83,8 @@
                 <hr class="offset-md-3 col-md-6 offset-1 col-10 my-3 my-md-5" />
                 <h2>Text</h2>
                 <div class="my-3">
-                    <p>Text can be placed using a query string.</p>
                     <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
+                    <p>Text can be placed using a query string.</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/400x200?text=HelloWorld" />
                         <img src="/resources/images/400x200-helloworld.jpg" class="img-fluid mt-3">
@@ -98,10 +100,34 @@
                 <hr class="offset-md-3 col-md-6 offset-1 col-10 my-3 my-md-5" />
                 <h2>Color</h2>
                 <div class="my-3">
-                    <p>Background and text color can be set using hex values</p>
                     <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
+                    <p>Background and text color can be set using hex values</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/640x480/#2596be/#e28743" />
+                        <img src="/resources/images/640x800-custom-colors.jpg" class="img-fluid mt-3">
+                    </div>
+                </div>
+                <div class="offset-md-3 col-md-6 offset-1 col-10 alert alert-dark my-3" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill me-2 alert-icon"
+                         viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                    </svg>
+                    Colors can either be written with or withouth a hash '#' at the beginning. Both '#fff' and 'fff' are valid.
+                </div>
+                <div class="my-3">
+                    <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
+                        <p>You can also set the background color only, if done this way, the image background will be generated with the provided custom color but with the default gray one for the font.</p>
+                        <input type="text" class="form-control" readonly="true"
+                               value="https://placeholderimage.rogelioherrera.dev/640x480/1656ad" />
+                        <img src="/resources/images/250x250-bluebg.jpg" class="img-fluid mt-3">
+                    </div>
+                </div>
+                <div class="my-3">
+                    <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
+                        <p>Alternatively, you can use color names to define a custom color:</p>
+                        <input type="text" class="form-control" readonly="true"
+                               value="https://placeholderimage.rogelioherrera.dev/640x480/red/blue" />
+                        <img src="/resources/images/300x300-custom-colors-byname.jpg" class="img-fluid mt-3">
                     </div>
                 </div>
             </div>
