@@ -71,7 +71,7 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
         /// <summary>
         /// Generate image based on parameters
         /// </summary>
-        /// <param name="sizeAndFormat">this parameter must have at least 1 side (ex: 600) or 2 (ex:400x600), the image format is optional, must be '.jpg' (default), '.png' or '.gif' (ex: 400x600.jpg).</param>
+        /// <param name="sizeAndFormat">this parameter must have at least 1 side (ex: 600) or 2 (ex: 400x600), the image format is optional, must be '.jpg' (default), '.png' or '.gif' (ex: 400x600.jpg).</param>
         /// <param name="text">The text that will be displayed on the image.</param>
         /// <returns>Service response with custom data type that includes; ImageBinaries as byte array and file MIME type.</returns>
         public async Task<ServiceResponse<GeneratedImage>> GetPlaceholderImageAsync(string sizeAndFormat, string text)
@@ -628,8 +628,8 @@ namespace Placeholder_Image_Generator_API.Services.PlaceholderImageService
                 return false;
             }
 
-            //Change Capital letters to "normal" letters, so if the user
-            //provides a capital "X", it will change to "x"
+            //Change Capital letters to "normal"(lower case) letters, so if the user
+            //provides a capital "X", it will be changed to "x"
             //this way we can detect the apropiate delimiter on the next method
             format = format.ToLower();
 

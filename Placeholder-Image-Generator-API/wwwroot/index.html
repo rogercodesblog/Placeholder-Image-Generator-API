@@ -13,7 +13,7 @@
 <body class="bg-body-tertiary">
     <div class="row m-0 bg-dark-subtle text-center">
         <h1 class=" mt-5 mb-3 fw-bold">Placeholder Generator</h1>
-        <p>Free service for generating image placeholders.</p>
+        <p>Free service for generating placeholder images.</p>
         <div class="col-12 mb-5">
             <img class="img-fluid rounded" src="/resources/images/250x250.jpeg" alt="Generated Image 250x250 jpg">
         </div>
@@ -27,7 +27,7 @@
                         <p>How does this even works?, we're glad you asked because we are going to explain it right here</p>
                         <a class="btn btn-dark" href="/swagger/" target="_blank">
                             You can also view the Swagger
-                            Documentation
+                            documentation by clicking Here.
                         </a>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="my-3">
                     <div class="offset-md-3 col-md-6 offset-1 col-10">
-                    <p>The <b>Height</b> is optional, you can create a square by not providing it:</p>
+                        <p>The <b>Height</b> is optional, you can create a square by not providing it:</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/250" />
                         <img src="/resources/images/250x250.jpeg" class="img-fluid mt-3">
@@ -60,7 +60,7 @@
                 <h2>Format</h2>
                 <div class="my-3">
                     <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
-                    <p>Generated images can have one of the next three formats: <b>jpg</b>, <b>png</b> or <b>gif</b>.</p>
+                        <p>Generated images can have one of the next three formats: <b>jpg</b>, <b>png</b> or <b>gif</b>.</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/640x480.jpg" />
                     </div>
@@ -84,7 +84,7 @@
                 <h2>Text</h2>
                 <div class="my-3">
                     <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
-                    <p>Text can be placed using a query string.</p>
+                        <p>Text can be placed using a query string, the default text is the image size.</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/400x200?text=HelloWorld" />
                         <img src="/resources/images/400x200-helloworld.jpg" class="img-fluid mt-3">
@@ -95,13 +95,13 @@
                          viewBox="0 0 16 16" role="img" aria-label="Warning:">
                         <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
                     </svg>
-                    The default text is the image size.
+                    The query string parameter name must be "<b>text</b>".
                 </div>
                 <hr class="offset-md-3 col-md-6 offset-1 col-10 my-3 my-md-5" />
                 <h2>Color</h2>
                 <div class="my-3">
                     <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
-                    <p>Background and text color can be set using hex values</p>
+                        <p>Background and text color can be set using hex values</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/640x480/#2596be/#e28743" />
                         <img src="/resources/images/640x800-custom-colors.jpg" class="img-fluid mt-3">
@@ -116,7 +116,7 @@
                 </div>
                 <div class="my-3">
                     <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
-                        <p>You can also set the background color only, if done this way, the image background will be generated with the provided custom color but with the default gray one for the font.</p>
+                        <p>You can also set the background color only, if done this way, the image background will be generated with the provided custom color but with the default gray for font.</p>
                         <input type="text" class="form-control" readonly="true"
                                value="https://placeholderimage.rogelioherrera.dev/640x480/1656ad" />
                         <img src="/resources/images/250x250-bluebg.jpg" class="img-fluid mt-3">
@@ -124,12 +124,207 @@
                 </div>
                 <div class="my-3">
                     <div class="offset-md-3 col-md-6 offset-1 col-10 my-3">
-                        <p>Alternatively, you can use color names to define a custom color:</p>
+                        <p>Alternatively, you can use color names to set colors.</p>
                         <input type="text" class="form-control" readonly="true"
-                               value="https://placeholderimage.rogelioherrera.dev/640x480/red/blue" />
+                               value="https://placeholderimage.rogelioherrera.dev/300x300/red/blue?text=Custom" />
                         <img src="/resources/images/300x300-custom-colors-byname.jpg" class="img-fluid mt-3">
                     </div>
                 </div>
+                <div class="my-3">
+                    <p>Common color names are shown in the table down below, the full color table can be seen                     <a class="text-decoration-none" href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.media.brushes?view=windowsdesktop-9.0" rel="noopener noreferrer" target="_blank">in this article</a>.</p>
+                </div>
+                <div class="my-3">
+
+                    <div class="card card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Hex Value</th>
+                                    <th scope="col">Preview</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Aqua</th>
+                                    <td>#00ffff</td>
+                                    <td>
+                                        <div style="background-color: #00ffff; display: block; height: 24px; width: 100%; " />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Beige</th>
+                                    <td>#f5f5db</td>
+                                    <td>
+                                        <div style="background-color: #f5f5db; display: block; height: 24px; width: 100%; " />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Black</th>
+                                    <td>#000</td>
+                                    <td>
+                                        <div style="background-color: #000; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Brown</th>
+                                    <td>#a42b2a</td>
+                                    <td>
+                                        <div style="background-color: #a42b2a; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Coral</th>
+                                    <td>#ff7f50</td>
+                                    <td>
+                                        <div style="background-color: #ff7f50; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Cyan</th>
+                                    <td>#0ff</td>
+                                    <td>
+                                        <div style="background-color: #0ff; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Crimson</th>
+                                    <td>#dc133b</td>
+                                    <td>
+                                        <div style="background-color: #dc133b; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Fuchsia</th>
+                                    <td>#ff00fe</td>
+                                    <td>
+                                        <div style="background-color: #ff00fe; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Gold</th>
+                                    <td>#fed700</td>
+                                    <td>
+                                        <div style="background-color: #fed700; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Gray</th>
+                                    <td>#808080</td>
+                                    <td>
+                                        <div style="background-color: #808080; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Green</th>
+                                    <td>#008001</td>
+                                    <td>
+                                        <div style="background-color: #008001; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Indigo</th>
+                                    <td>#4b0081</td>
+                                    <td>
+                                        <div style="background-color: #4b0081; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Khaki</th>
+                                    <td>#f0e78c</td>
+                                    <td>
+                                        <div style="background-color: #f0e78c; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Lime</th>
+                                    <td>#00ff01</td>
+                                    <td>
+                                        <div style="background-color: #00ff01; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Magenta</th>
+                                    <td>#ff00fe</td>
+                                    <td>
+                                        <div style="background-color: #ff00fe; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Navy</th>
+                                    <td>#010080</td>
+                                    <td>
+                                        <div style="background-color: #010080; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Orange</th>
+                                    <td>#fea500</td>
+                                    <td>
+                                        <div style="background-color: #fea500; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Pink</th>
+                                    <td>#ffc0cb</td>
+                                    <td>
+                                        <div style="background-color: #ffc0cb; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Purple</th>
+                                    <td>#81007f</td>
+                                    <td>
+                                        <div style="background-color: #81007f; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Red</th>
+                                    <td>#fe0000</td>
+                                    <td>
+                                        <div style="background-color: #fe0000; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Silver</th>
+                                    <td>#c0c0c0</td>
+                                    <td>
+                                        <div style="background-color: #c0c0c0; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Teal</th>
+                                    <td>#008081</td>
+                                    <td>
+                                        <div style="background-color: #008081; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Violet</th>
+                                    <td>#ee82ef</td>
+                                    <td>
+                                        <div style="background-color: #ee82ef; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">White</th>
+                                    <td>#fff</td>
+                                    <td>
+                                        <div style="background-color: #fff; display: block; height: 24px; width: 100%; border:1px solid black;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Yellow</th>
+                                    <td>#ff0</td>
+                                    <td>
+                                        <div style="background-color: #ff0; display: block; height: 24px; width: 100%;" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
 
 
@@ -137,6 +332,11 @@
 
         </div>
     </div>
+    <footer class="row mx-0 p-5 mt-5  bg-dark-subtle">
+        <div class="col-12 text-center">
+            <p>Made with ❤️ by <a class="text-decoration-none" href="https://rogelioherrera.dev/" rel="noopener noreferrer" target="_blank">Rogelio Herrera</a>.</p>
+        </div>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
