@@ -1,5 +1,5 @@
 # Placeholder Image Generator API
-<p>This project allows users to generate placeholder images, these images can have different colors and sizes based on the users input. Generates .jpg, .gif or .png.</p> 
+<p>This API generates images that can be used as placeholders, the image size, color and text are generated according to user input, supported image types: jpg, png and gif.</p> 
 
 ![Home Page.](/screenshots/0-Home.png)
 
